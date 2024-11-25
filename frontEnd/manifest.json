@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "API Login with Screenshots",
   "version": "1.2",
-  "permissions": ["storage", "tabs", "scripting","activeTab"],
+  "permissions": ["storage", "tabs", "scripting", "activeTab"],
   "background": {
     "service_worker": "background.js"
   },
@@ -11,5 +11,8 @@
     "default_popup": "popup.html",
     "default_popup_width": 400,
     "default_popup_height": 600
+  },
+  "icons": {
+    "128": "Bb.png"
   }
 }
