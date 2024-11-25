@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "9000:9000"
+      - "8000:8000"
+      - "8001:8001"
+      - "5000:5000"
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - model_cache:/root/.cache
+    environment:
+      - SAMBANOVA_API_KEY=${SAMBANOVA_API_KEY}
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+    command: python main.py
+    restart: "no"
+
+volumes:
+  model_cache:

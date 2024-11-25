@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Assistant</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --border: #334155;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      width: 400px;
+      min-height: 500px;
+      overflow-x: hidden;
+    }
+
+    .page {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background-color: var(--bg-primary);
+      padding: 1.5rem;
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2rem;
+      padding: 0.5rem 0;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--accent), #8b5cf6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    input {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      font-size: 0.875rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    }
+
+    .button {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.875rem;
+    }
+
+    .button:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .button.secondary {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    .button.secondary:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 2rem 0;
+    }
+
+    .toggle-label {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .toggle {
+      position: relative;
+      width: 3.5rem;
+      height: 2rem;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--bg-secondary);
+      transition: .4s;
+      border-radius: 2rem;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 1.5rem;
+      width: 1.5rem;
+      left: 0.25rem;
+      bottom: 0.25rem;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(1.5rem);
+    }
+
+    .query-display {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      word-wrap: break-word;
+      color: var(--text-primary);
+    }
+
+    .answer-text {
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .results-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .result-image {
+      width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      object-fit: cover;
+    }
+
+    #error-message {
+      color: #ef4444;
+      font-size: 0.875rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .image-wrapper {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .error-message {
+      color: #ef4444;
+      padding: 0.75rem;
+      background-color: #fef2f2;
+      border-radius: 0.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .no-images {
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="login-page" class="page active">
+    <div class="header">
+      <button id="logout-button" class="button secondary">Logout</button>
+    </div>
+    <h1 class="title">Search Assistant</h1>
+    <div class="input-group">
+      <input type="text" id="server-ip" placeholder="Server IP" />
+      <input type="text" id="token" placeholder="Token" />
+    </div>
+    <button id="login-button" class="button">Login</button>
+    <p id="error-message"></p>
+  </div>
+
+  <div id="control-page" class="page">
+    <div class="header">
+      <button id="logout-button" class="button secondary">Logout</button>
+    </div>
+
+    <div class="toggle-container">
+      <span class="toggle-label">Enable Screenshots</span>
+      <label class="toggle">
+        <input type="checkbox" id="screenshot-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="query-input" placeholder="What would you like to search?" />
+      <button id="query-button" class="button">Search</button>
+    </div>
+  </div>
+
+  <div id="results-page" class="page">
+    <div class="header">
+      <button id="back-button" class="button secondary">Back</button>
+      <button id="results-logout-button" class="button secondary">Logout</button>
+    </div>
+
+    <div class="query-display"></div>
+    <div class="answer-text"></div>
+    <div class="results-images"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
