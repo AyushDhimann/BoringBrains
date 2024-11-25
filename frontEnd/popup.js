@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function sendQuery(query) {
-    const response = await fetch('http://1725364.xyz:9000/query', {
+    const response = await fetch('http://{serverIp}:9000/query', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query })
