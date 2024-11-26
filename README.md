@@ -11,6 +11,10 @@ Whether you're studying, shopping, working, or simply browsing, Bb keeps track o
 - **Easy Setup**: Host on your local machine or a remote web server.
 - **Chrome Integration**: Directly integrates with Chrome to enable seamless searching.
 
+## Workflow
+
+![FLOWCHART Bb](https://github.com/user-attachments/assets/35239449-5ea2-4639-9343-2ebaf37af9f6)
+
 ## Installation (Linux)
 
 ### Prerequisites
